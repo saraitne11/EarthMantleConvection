@@ -30,14 +30,14 @@ class EarthMantleDataset(data.Dataset):
         self.channel_in = len(self.x_features)
         self.channel_out = len(self.y_features)
 
-        self.lon_len = self.netcdf['lon'].shape[0]      # 경도
-        self.lat_len = self.netcdf['lat'].shape[0]      # 위도
+        self.lat_len = self.netcdf['lat'].shape[0]  # 위도(height)
+        self.lon_len = self.netcdf['lon'].shape[0]  # 경도(width)
         self.r_len = self.netcdf['r'].shape[0]
 
-        self.volume_size = (self.r_len, self.lon_len, self.lat_len)
+        self.volume_size = (self.r_len, self.lat_len, self.lon_len)
 
-        self.x_size = (self.channel_in, self.r_len+2*d, self.lon_len+2*h, self.lat_len+2*w)
-        self.y_size = (self.channel_out, self.r_len, self.lon_len, self.lat_len)
+        self.x_size = (self.channel_in, self.r_len+2*d, self.lat_len+2*h, self.lon_len+2*w)
+        self.y_size = (self.channel_out, self.r_len, self.lat_len, self.lon_len)
 
         # (Channel, Depth, Height, Width)
         self.x = np.zeros(self.x_size, dtype=np.float32)
@@ -66,6 +66,6 @@ class EarthMantleDataset(data.Dataset):
 
 if __name__ == '__main__':
     file_path = 'D:/EarthMantleConvection/mantle01/spherical001.nc'
-    dataset = EarthMentleDataset(file_path, 5, 5, 5)
+    dataset = EarthMantleDataset(file_path, 5, 5, 5)
     print(dataset.get_x_size())
     print(dataset.get_y_size())
