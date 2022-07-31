@@ -71,7 +71,8 @@ class EarthMantleDataset(data.Dataset):
     def __init__(self,
                  x_volume: np.ndarray,
                  y_volume: np.ndarray,
-                 volume_size: Tuple[int, int, int]):
+                 volume_size: Tuple[int, int, int],
+                 netcdf_file=''):
         self.x_volume = torch.Tensor(x_volume)
         self.y_volume = torch.Tensor(y_volume)
 
@@ -79,6 +80,8 @@ class EarthMantleDataset(data.Dataset):
         self.depth = x_volume.shape[1] - volume_size[0] + 1
         self.height = x_volume.shape[2] - volume_size[1] + 1
         self.width = x_volume.shape[3] - volume_size[2] + 1
+
+        self.netcdf_file = netcdf_file
 
         do = self.depth // 2    # depth offset
         ho = self.height // 2   # height offset
@@ -120,7 +123,7 @@ class EarthMantleDataset(data.Dataset):
 def my_test():
     file_path = 'D:/EarthMantleConvection/mantle01/spherical001.nc'
     x_volume, y_volume, volume_size = read_cdf(file_path, 5, 5, 5, './scalers')
-    dataset = EarthMantleDataset(x_volume, y_volume, volume_size)
+    dataset = EarthMantleDataset(x_volume, y_volume, volume_size, file_path)
     print(dataset.get_volume_size())
     print(dataset.get_x_volume_size())
     print(dataset.get_y_volume_size())
