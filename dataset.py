@@ -102,7 +102,7 @@ class EarthMantleDataset(data.Dataset):
         x = self.x_volume[:, ix - self.dl:ix + self.du, iy - self.hl:iy + self.hu, iz - self.wl:iz + self.wu]
         y = self.y_volume[:, ix - self.dl:ix + self.du, iy, iz]
         y = y.view(-1)
-        return x, y
+        return x, y, (ix, iy, iz)
 
     def __len__(self):
         return len(self.indices)
@@ -126,16 +126,17 @@ def my_test():
     print(dataset.get_y_volume_size())
     print(len(dataset))
 
-    _x, _y = dataset[0]
-    print(_x.shape, _y.shape)
+    _x, _y, _idx = dataset[0]
+    print(_x.shape, _y.shape, _idx)
 
-    _x, _y = dataset[-1]
-    print(_x.shape, _y.shape)
+    _x, _y, _idx = dataset[-1]
+    print(_x.shape, _y.shape, _idx)
 
     loader = data.DataLoader(dataset=dataset, batch_size=128, num_workers=2, shuffle=True)
-    for x, y in loader:
+    for x, y, idx in loader:
         print(x.shape)
         print(y.shape)
+        print(torch.stack(idx, dim=1).shape)
         break
 
 
